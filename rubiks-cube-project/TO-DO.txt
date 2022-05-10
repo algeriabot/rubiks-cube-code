@@ -1,0 +1,69 @@
+Code Team To-Do List
+
+We're using the standard Adafruit_Neopixel library, since I can't seem to get the NeoPxl8 nor the NeoMatrix to work. Check out https://learn.adafruit.com/adafruit-neopixel-uberguide/arduino-library-use for usage examples.
+There will be 6 Neopixel objects, each with a different pin controlling a different face.
+
+-- Functions to write --
+
+- turnFaceClockwise(): 
+    Accepts: a 3x3 matrix of color values
+
+- turnFaceCounterClockwise(): 
+    Accepts: a 3x3 matrix of color values
+
+    For the two above, you might want to look into variable pointers. Quick rundown below
+
+
+Basically, sometimes you want to pass a value to a function and modify it inside that function.
+In this case, the value you want to pass is the 3x3 matrix and you want to rotate it.
+Normally when you do this with python you would return the value from the function, but you can do something special with C++.
+Pointers are a way of passing the memory address of a variable to a function instead of the variable contents itself. You use & to denote that a variable pointer is being used.
+The function declaration would look like this: returntype functionName(datatype& variablename)
+So in your case:
+void turnFaceClockwise(int[9]& matrix) {
+    do something to the matrix
+    no need to return the matrix value, it's already modified
+}
+When you call the function, you can just do this:
+int myarray[36] = {
+    1,2,3,
+    4,5,6,
+    7,8,9
+};
+turnFaceClockwise(myarray&);
+And if you did the coding right, the variable should contain a modified matrix.
+
+
+- showFace(): (done)
+    Accepts: a 3x3 matrix of color values, a Neopixel face object of 324 LEDS
+    Executes: Pushes the 3x3 matrix out to all the lights on the face
+    Returns: nothing
+
+
+By '3x3 matrix', I mean an array like {1,2,3,4,5,6,7,8,9} or 
+{
+    1,2,3,
+    4,5,6,
+    7,8,9
+} (they're the same thing, just with line breaks).
+What we don't really need is a an nested array like {{1,2,3}, {4,5,6}, {7,8,9}} or
+{
+    {1,2,3},
+    {4,5,6},
+    {7,8,9}
+} since all our panels are wired looping the data back around.
+
+- showAnimation(): (don't need to work on rn)
+    Some kind of animation that show how the face turns? This will probably involve several frames of animation, each represented by a 18x18 grid. The frames might contain numbers 1-9 to represent the original colors of the face and how they move around the cube as the animation progresses.
+
+
+Here's our proposed pseudocode for turning a face:
+
+    Take the 3x3 array for the face
+    Push the array using showFace()
+    Show the animation using showAnimation()
+    Rotate the 3x3 face array using turnFace
+    Push the new array to the face using showFace()
+    Repeat for multiple faces
+ 
+Note that to turn a face of a Rubik's Cube, there are other faces affected, not just the 9 stickers you're changing.
